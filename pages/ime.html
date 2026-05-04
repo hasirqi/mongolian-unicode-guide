@@ -8,12 +8,12 @@
 </head>
 <body>
 <nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="../index.html">首页</a><a href="beginner.html">大众版</a><a href="char-table.html">字符表</a><a href="ime.html">iMongol IME</a><a href="tools.html">在线工具</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="test-cases.html">测试</a><a href="research.html">资料</a></div></div></nav>
-<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">open-mongol-ime · Web MVP</p><h1>iMongol IME：传统蒙古文网页输入法</h1><p class="subtitle">第一步先做 Web IME：用拉丁转写输入传统蒙古文 Unicode，为将来的系统输入法、聊天工具和移动端键盘打基础。</p></div></header>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">open-mongol-ime · Smart Web MVP</p><h1>iMongol IME：传统蒙古文网页输入法</h1><p class="subtitle">用最简单的界面，做更聪明的输入：拉丁转写 → 智能候选 → 标准 Unicode → 码点验证 → 竖排预览。</p></div></header>
 <main>
 <section class="section callout">
-  <h2>实验性说明</h2>
-  <p class="lead">这是 iMongol IME 的最小可用原型。当前目标不是一次性做成标准输入法，而是先打通：转写输入 → Unicode 输出 → 复制 → 码点分析 → 竖排预览。</p>
-  <div class="chips"><span>产品名：iMongol IME</span><span>项目名：open-mongol-ime</span><span>阶段：Web MVP</span></div>
+  <h2>设计原则</h2>
+  <p class="lead">不照搬旧规则，也不乱改 Unicode。iMongol IME 的目标是用词典、模糊匹配、音节推测和可解释验证，把传统蒙古文输入变得自然、简单、可信。</p>
+  <div class="chips"><span>产品名：iMongol IME</span><span>项目名：open-mongol-ime</span><span>核心：输入 + 推测 + 验证</span></div>
 </section>
 
 <section class="section two-col">
@@ -26,17 +26,22 @@
       <button id="sampleSentence" class="tool-button">样例句</button>
       <button id="clearIme" class="tool-button ghost">清空</button>
     </div>
-    <p class="note">当前采用最长匹配规则：先匹配 ch / sh / ng / oe / ue，再匹配单字母。后续会加入候选词、词库和更严谨的转写规则。</p>
+    <p class="note">当前引擎会先查词典，再做模糊修正和最长匹配。候选不是“标准结论”，而是可解释的输入建议。</p>
   </div>
   <aside class="card">
-    <h2>规则状态</h2>
+    <h2>智能策略</h2>
     <ul class="checks">
-      <li>本地浏览器运行，不上传文本</li>
-      <li>输出标准 Unicode 字符</li>
-      <li>可送入码点查看器验证</li>
-      <li>规则仍为实验版，需要持续校正</li>
+      <li>词典优先：常用词直接给高置信候选</li>
+      <li>模糊修正：monggol / mongol 等近似输入可归并</li>
+      <li>规则兜底：未知词按基础音节规则转换</li>
+      <li>全程本地运行：不上传任何文本</li>
     </ul>
   </aside>
+</section>
+
+<section class="section">
+  <h2>智能候选</h2>
+  <div id="candidateList" class="candidate-list"></div>
 </section>
 
 <section class="section grid-2">
@@ -61,13 +66,13 @@
     <button id="copyImeCodepoints" class="tool-button">复制码点序列</button>
   </article>
   <article class="card">
-    <h2>转写调试</h2>
+    <h2>解释与调试</h2>
     <div id="imeDebug" class="debug-view"></div>
   </article>
 </section>
 
 <section class="section">
-  <h2>当前基础转写规则</h2>
+  <h2>当前基础规则表</h2>
   <div class="card table-wrap">
     <table class="table"><thead><tr><th>拉丁</th><th>蒙古文</th><th>码位</th><th>说明</th></tr></thead><tbody id="ruleRows"></tbody></table>
   </div>
@@ -76,10 +81,10 @@
 <section class="section callout">
   <h2>后续路线</h2>
   <div class="four">
-    <article class="card"><h3>Phase 1</h3><p>Web IME：转写输入、复制、码点分析、竖排预览。</p></article>
-    <article class="card"><h3>Phase 2</h3><p>候选词和词库：常用词、姓名、地名、后缀规则。</p></article>
-    <article class="card"><h3>Phase 3</h3><p>IME Core：把规则抽成可复用核心，供系统输入法和聊天工具调用。</p></article>
-    <article class="card"><h3>Phase 4</h3><p>系统输入法 / 移动键盘 / 即时聊天工具。</p></article>
+    <article class="card"><h3>Phase 1</h3><p>Smart Web IME：候选、复制、码点分析、竖排预览。</p></article>
+    <article class="card"><h3>Phase 2</h3><p>用户反馈词库：常用词、姓名、地名、后缀规则。</p></article>
+    <article class="card"><h3>Phase 3</h3><p>IME Core：把推测引擎抽成可复用核心。</p></article>
+    <article class="card"><h3>Phase 4</h3><p>系统输入法 / 移动键盘 / 传统蒙古文即时聊天工具。</p></article>
   </div>
 </section>
 </main>
