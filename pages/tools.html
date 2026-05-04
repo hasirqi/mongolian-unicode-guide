@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>在线工具｜码点查看器与竖排预览</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="beginner.html">大众版</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="tools.html">在线工具</a><a href="web-demo.html">Web Demo</a><a href="research.html">资料</a><a href="test-cases.html">测试</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">Tools</p><h1>在线码点查看器 + 竖排预览</h1><p class="subtitle">输入传统蒙古文文本，即时查看 Unicode 码点、不可见控制符、竖排显示效果，并对比不同字体。</p></div></header>
+<main>
+<section class="section two-col">
+  <div class="card">
+    <h2>输入文本</h2>
+    <textarea id="inputText" class="tool-textarea" spellcheck="false">ᠮᠣᠩᠭᠣᠯ</textarea>
+    <div class="tool-actions">
+      <button id="sampleBasic" class="tool-button">基础样例</button>
+      <button id="sampleControl" class="tool-button">控制符样例</button>
+      <button id="clearInput" class="tool-button ghost">清空</button>
+    </div>
+    <p class="note">提示：本工具在浏览器本地运行，不上传任何文本。它用于检查“底层码点序列”，不是最终标准判断。</p>
+  </div>
+  <aside class="card">
+    <h2>文本统计</h2>
+    <div class="stats"><div><strong id="charCount">0</strong><span>字符数</span></div><div><strong id="codepointCount">0</strong><span>码点数</span></div><div><strong id="controlCount">0</strong><span>控制符</span></div></div>
+    <h3>发现的特殊字符</h3>
+    <div id="specialBadges" class="chips"></div>
+  </aside>
+</section>
+
+<section class="section">
+  <h2>在线码点查看器</h2>
+  <div class="card table-wrap">
+    <table class="table"><thead><tr><th>#</th><th>字符</th><th>Unicode</th><th>十进制</th><th>类型/名称</th><th>说明</th></tr></thead><tbody id="codepointRows"></tbody></table>
+  </div>
+</section>
+
+<section class="section grid-2">
+  <article class="card">
+    <h2>码点序列</h2>
+    <pre><code id="sequenceOutput"></code></pre>
+    <button id="copySequence" class="tool-button">复制码点序列</button>
+  </article>
+  <article class="card">
+    <h2>调试视图</h2>
+    <p>不可见字符会用标签显示：</p>
+    <div id="debugView" class="debug-view"></div>
+  </article>
+</section>
+
+<section class="section">
+  <h2>竖排预览 + 字体对比</h2>
+  <div class="card tool-controls">
+    <label>字号 <input id="fontSize" type="range" min="20" max="72" value="42" /></label>
+    <label>字距 <input id="letterSpacing" type="range" min="0" max="24" value="3" /></label>
+    <label>书写方向
+      <select id="writingMode"><option value="vertical-lr">vertical-lr：列从左到右</option><option value="vertical-rl">vertical-rl：列从右到左</option><option value="horizontal-tb">horizontal-tb：横排对照</option></select>
+    </label>
+  </div>
+  <div id="previewGrid" class="preview-grid"></div>
+</section>
+
+<section class="section callout">
+  <h2>下一步迭代</h2>
+  <p>这个工具页后续可以继续增强：导出测试报告、保存样例、截图对比、字体版本记录、浏览器兼容矩阵、FVS 变体自动提示。</p>
+  <div class="next-links"><a href="test-cases.html">去测试用例</a><a href="research.html">看研究资料</a></div>
+</section>
+</main>
+<footer><p>Open Mongolian Script Lab · CC BY 4.0 / MIT</p></footer>
+<script src="../scripts/tools.js"></script>
+</body>
+</html>
