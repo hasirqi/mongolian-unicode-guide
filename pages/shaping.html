@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>字形变换与排版引擎｜传统蒙古文</title><link rel="stylesheet" href="../style.css" /></head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="beginner.html">大众版</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="research.html">资料</a><a href="test-cases.html">测试</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">Shaping</p><h1>字形变换与排版引擎</h1><p class="subtitle">传统蒙古文显示的难点，不在“有没有码位”，而在“同一字符如何根据上下文变成正确字形”。</p></div></header>
+<main>
+<section class="section two-col"><div><h2>什么是 shaping？</h2><p class="lead">Shaping 是把 Unicode 字符序列变成最终 glyph 序列的过程。传统蒙古文需要根据连接关系、位置、变体选择器和字体规则来决定最终显示。</p></div><aside class="card"><h3>一句话</h3><p>Unicode 负责“字符是谁”；shaping engine 负责“这个字符此刻应该长什么样”。</p></aside></section>
+<section class="section"><h2>四种常见位置形</h2><div class="forms"><div><small>独立形</small><b>ᠭ</b></div><span>→</span><div><small>词首形</small><b>ᠭ‍</b></div><span>→</span><div><small>词中形</small><b>‍ᠭ‍</b></div><span>→</span><div><small>词尾形</small><b>‍ᠭ</b></div></div><p class="note">这是简化示意。真实显示依赖字体、系统、浏览器和具体文本上下文。</p></section>
+<section class="section grid-3"><article class="card"><h2>输入</h2><p>用户输入的是字符序列，例如字母、FVS、ZWJ、NNBSP 等。</p></article><article class="card"><h2>分析</h2><p>排版引擎读取上下文，判断字符是否连接、位于词首/词中/词尾，是否请求变体。</p></article><article class="card"><h2>输出</h2><p>字体根据 OpenType 表提供 glyph，最终形成可见的连写字形。</p></article></section>
+<section class="section"><h2>工程数据流</h2><div class="flow"><span>Unicode 字符</span><span>脚本识别</span><span>连接状态</span><span>位置形判断</span><span>GSUB 替换</span><span>GPOS 定位</span><span>最终 glyph</span></div></section>
+<section class="section grid-2"><article class="card"><h2>为什么会错形？</h2><ul><li>字体不支持蒙古文 OpenType shaping</li><li>浏览器或系统排版引擎支持不完整</li><li>控制符使用错误</li><li>文本复制粘贴时丢失隐藏字符</li><li>竖排方向或标点方向处理异常</li></ul></article><article class="card"><h2>如何判断是否正确？</h2><ul class="checks"><li>测试独立、词首、词中、词尾形</li><li>测试 FVS 变体</li><li>测试复制后码点是否一致</li><li>测试不同系统和浏览器</li><li>测试 PDF 和图片导出</li></ul></article></section>
+<section class="section callout"><h2>研究迭代方向</h2><p>建议建立“字符序列 → 期望字形 → 实际浏览器截图 → 字体版本 → OS/浏览器版本”的测试矩阵。这样才能把问题从主观“看起来不对”变成可复现 bug。</p><div class="next-links"><a href="control-chars.html">下一页：控制符与变体选择器</a><a href="web-demo.html">Web 竖排 Demo</a></div></section>
+</main><footer><p>Open Mongolian Script Lab · CC BY 4.0 / MIT</p></footer>
+</body></html>
