@@ -100,6 +100,15 @@
       <button id="exportFeedback" class="tool-button ghost">导出 JSON</button>
       <button id="clearFeedback" class="tool-button ghost">清空本地词库</button>
     </div>
+
+    <h3>导入 JSON</h3>
+    <p class="note">支持导入数组格式，例如 <code>[{"latin":"monggol","mongolian":"ᠮᠣᠩᠭᠣᠯ","note":"common word"}]</code>。重复 latin 会被新导入内容覆盖。</p>
+    <textarea id="importFeedbackJson" class="feedback-input import-json" placeholder='[{"latin":"monggol","mongolian":"ᠮᠣᠩᠭᠣᠯ","note":"common word"}]'></textarea>
+    <div class="tool-actions">
+      <button id="importFeedback" class="tool-button">导入 JSON 到本地词库</button>
+      <button id="loadSampleImport" class="tool-button ghost">填入示例 JSON</button>
+    </div>
+    <p id="importFeedbackStatus" class="note" hidden></p>
   </div>
   <aside class="card">
     <h2>本地反馈记录</h2>
