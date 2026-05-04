@@ -12,9 +12,14 @@ const feedbackLatin = document.getElementById('feedbackLatin');
 const feedbackMongolian = document.getElementById('feedbackMongolian');
 const feedbackNote = document.getElementById('feedbackNote');
 const feedbackList = document.getElementById('feedbackList');
+const importFeedbackJson = document.getElementById('importFeedbackJson');
+const importFeedbackStatus = document.getElementById('importFeedbackStatus');
 
 const FEEDBACK_KEY = 'imongol_ime_feedback_v1';
-const imeEngine = window.iMongolIMEEngine.createEngine(window.iMongolIMEData);
+const SAMPLE_IMPORT = [
+  { latin: 'monggol', mongolian: 'ᠮᠣᠩᠭᠣᠯ', note: 'common word' },
+  { latin: 'bichig', mongolian: 'ᠪᠢᠴᠢᠭ', note: 'script / writing' }
+];
 let activeCandidate = null;
 
 function escapeHtml(value) {
@@ -30,6 +35,13 @@ function flashCopied(button) {
     button.textContent = old;
     button.classList.remove('copied');
   }, 1200);
+}
+
+function showImportStatus(message, ok = true) {
+  if (!importFeedbackStatus) return;
+  importFeedbackStatus.hidden = false;
+  importFeedbackStatus.textContent = message;
+  importFeedbackStatus.classList.toggle('danger-note', !ok);
 }
 
 function copyText(value, button) {
@@ -71,6 +83,19 @@ function rebuildEngine() {
 }
 
 let currentEngine = rebuildEngine();
+
+function normalizeImportedFeedback(raw) {
+  const data = Array.isArray(raw) ? raw : Object.entries(raw || {}).map(([latin, value]) => {
+    if (typeof value === 'string') return { latin, mongolian: value, note: 'imported object map' };
+    return { latin, mongolian: value?.mongolian || value?.text || '', note: value?.note || 'imported object map' };
+  });
+  return data.map(item => ({
+    latin: String(item.latin || item.input || '').trim(),
+    mongolian: String(item.mongolian || item.text || item.output || '').trim(),
+    note: String(item.note || item.source || 'imported JSON').trim(),
+    createdAt: item.createdAt || new Date().toISOString().slice(0, 10)
+  })).filter(item => item.latin && item.mongolian);
+}
 
 function renderRules() {
   ruleRows.innerHTML = currentEngine.rules.map(([latin, mongolian, code, note]) => `
@@ -172,6 +197,29 @@ document.getElementById('exportFeedback').addEventListener('click', event => {
 document.getElementById('clearFeedback').addEventListener('click', () => {
   localStorage.removeItem(FEEDBACK_KEY);
   refreshAfterFeedbackChange();
+});
+
+document.getElementById('loadSampleImport').addEventListener('click', () => {
+  importFeedbackJson.value = JSON.stringify(SAMPLE_IMPORT, null, 2);
+  showImportStatus('已填入示例 JSON，可以直接导入。');
+});
+
+document.getElementById('importFeedback').addEventListener('click', event => {
+  try {
+    const imported = normalizeImportedFeedback(JSON.parse(importFeedbackJson.value || '[]'));
+    if (!imported.length) {
+      showImportStatus('没有找到可导入的词条。请检查 latin 和 mongolian 字段。', false);
+      return;
+    }
+    const map = new Map(loadFeedback().map(item => [String(item.latin).toLowerCase(), item]));
+    imported.forEach(item => map.set(item.latin.toLowerCase(), item));
+    saveFeedbackList(Array.from(map.values()).slice(0, 1000));
+    flashCopied(event.currentTarget);
+    showImportStatus(`导入完成：${imported.length} 条，重复 latin 已自动覆盖。`);
+    refreshAfterFeedbackChange();
+  } catch (error) {
+    showImportStatus('JSON 解析失败：请确认格式正确。', false);
+  }
 });
 
 feedbackList.addEventListener('click', event => {
