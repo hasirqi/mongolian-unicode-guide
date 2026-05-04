@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>测试用例｜传统蒙古文 Unicode</title><link rel="stylesheet" href="../style.css" /></head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="beginner.html">大众版</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="research.html">资料</a><a href="test-cases.html">测试</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">Test Cases</p><h1>测试用例与验收清单</h1><p class="subtitle">把“显示不对”变成可以复现、可以提交 Issue、可以修复的工程测试。</p></div></header>
+<main>
+<section class="section two-col"><div><h2>测试目标</h2><p class="lead">传统蒙古文支持不能只看“页面上似乎显示了字”。真正的验收要覆盖输入、存储、复制、搜索、竖排、字体、浏览器、PDF 和图片导出。</p></div><aside class="card"><h3>测试原则</h3><p>每个测试项都要记录：输入文本、底层码点、字体、浏览器、系统、截图、预期结果、实际结果。</p></aside></section>
+<section class="section"><h2>基础测试矩阵</h2><table class="table"><thead><tr><th>测试项</th><th>要验证什么</th><th>通过标准</th></tr></thead><tbody><tr><td>输入</td><td>输入法是否输出标准 Unicode 字符序列。</td><td>码点序列与预期一致。</td></tr><tr><td>显示</td><td>独立形、词首形、词中形、词尾形是否正确。</td><td>目标字体与标准样例一致。</td></tr><tr><td>控制符</td><td>FVS、ZWJ、ZWNJ、NNBSP 是否被正确处理。</td><td>不可见字符没有丢失，显示符合预期。</td></tr><tr><td>竖排</td><td>writing-mode、列方向、标点方向是否正确。</td><td>从上到下，列从左到右，标点不乱。</td></tr><tr><td>复制粘贴</td><td>复制后底层码点是否保持。</td><td>粘贴结果与原始码点完全一致。</td></tr><tr><td>搜索排序</td><td>搜索是否能找到同一文本，排序是否稳定。</td><td>不因字体或显示形态影响文本操作。</td></tr><tr><td>导出</td><td>PDF、图片、打印是否保持显示。</td><td>导出结果与网页显示一致。</td></tr></tbody></table></section>
+<section class="section"><h2>建议测试样例</h2><pre><code>样例 1：基础词
+显示：ᠮᠣᠩᠭᠣᠯ
+码点：U+182E U+1823 U+1829 U+182D U+1823 U+182F
+
+样例 2：位置形测试
+目标：测试同一字母在独立、词首、词中、词尾的显示差异
+记录：输入序列 / 截图 / 字体 / 浏览器
+
+样例 3：控制符测试
+目标：测试 FVS1/FVS2/FVS3、ZWJ、ZWNJ、NNBSP 是否保留并影响显示
+记录：可见文本 + 不可见字符位置
+
+样例 4：竖排测试
+CSS：writing-mode: vertical-lr; text-orientation: mixed;
+目标：检查列方向、标点方向、复制粘贴结果</code></pre></section>
+<section class="section grid-3"><article class="card"><h2>浏览器</h2><ul><li>Chrome</li><li>Safari</li><li>Firefox</li><li>Edge</li></ul></article><article class="card"><h2>系统</h2><ul><li>macOS</li><li>Windows</li><li>iOS</li><li>Android</li></ul></article><article class="card"><h2>输出</h2><ul><li>网页显示</li><li>PDF 导出</li><li>图片导出</li><li>打印</li></ul></article></section>
+<section class="section callout"><h2>下一步</h2><p>建议把本页扩展成自动化测试工具：输入文本 → 自动列出码点 → 多字体预览 → 生成截图 → 输出兼容性报告。</p><div class="next-links"><a href="research.html">研究资料</a><a href="../index.html">回到首页</a></div></section>
+</main><footer><p>Open Mongolian Script Lab · CC BY 4.0 / MIT</p></footer>
+</body></html>
