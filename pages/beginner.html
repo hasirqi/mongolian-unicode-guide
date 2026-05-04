@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>大众解释版｜传统蒙古文 Unicode 编码</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="beginner.html">大众版</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="research.html">资料</a><a href="test-cases.html">测试</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">Beginner</p><h1>大众解释版：先理解表面逻辑</h1><p class="subtitle">这页不讲太深的标准细节，只讲“为什么传统蒙古文在电脑里这么特殊”。</p></div></header>
+<main>
+<section class="section two-col"><div><h2>最重要的一句话</h2><p class="lead">传统蒙古文在电脑里保存的是“字符编号”，不是每个字母看起来的样子。你看到的最终字形，是电脑根据前后文、字体和排版规则临时生成的。</p></div><aside class="card"><h3>类比</h3><p>Unicode 像“身份证号”；字体像“衣服”；排版引擎像“穿衣规则”。同一个字符，在不同位置可能穿不同衣服。</p></aside></section>
+<section class="section grid-3"><article class="card"><h2>1. 字符</h2><p>字符是“这个字母是什么”。例如某个蒙古文字母有自己的 Unicode 编号。</p></article><article class="card"><h2>2. 字形</h2><p>字形是“这个字母长什么样”。同一个字符可能有独立形、词首形、词中形、词尾形。</p></article><article class="card"><h2>3. 显示</h2><p>显示是字体和排版引擎共同完成的结果。缺字体或排版能力不足，就会错形、断开或显示方框。</p></article></section>
+<section class="section"><h2>为什么不能当图片处理？</h2><div class="grid-2"><article class="card danger"><h3>当图片的坏处</h3><ul><li>不能搜索</li><li>不能复制粘贴</li><li>不能被输入法正常输入</li><li>不能被机器翻译、OCR、LLM 稳定处理</li></ul></article><article class="card"><h3>当文本的好处</h3><ul class="checks"><li>可以保存与交换</li><li>可以搜索与排序</li><li>可以做输入法、字典和语料库</li><li>可以进入网页、App 和 AI 工作流</li></ul></article></div></section>
+<section class="section"><h2>一张简图</h2><div class="pipeline"><article class="step"><span class="num">1</span><h3>输入</h3><p>键盘或输入法输出标准字符。</p></article><article class="step"><span class="num">2</span><h3>保存</h3><p>系统保存 Unicode 码点序列。</p></article><article class="step"><span class="num">3</span><h3>显示</h3><p>字体和排版引擎把码点变成正确字形。</p></article></div></section>
+<section class="section callout"><h2>读完这一页，你只要记住</h2><p class="lead">传统蒙古文数字化的核心，不只是“有 Unicode 编码”，而是让输入、保存、显示、复制、搜索、竖排全部打通。</p><div class="next-links"><a href="unicode-block.html">下一页：Unicode 区块与码位</a><a href="shaping.html">继续：字形变换</a></div></section>
+</main><footer><p>Open Mongolian Script Lab · CC BY 4.0 / MIT</p></footer>
+</body>
+</html>
