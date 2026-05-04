@@ -8,7 +8,12 @@ const copyMongolianBtn = document.getElementById('copyMongolian');
 const copyCodepointsBtn = document.getElementById('copyImeCodepoints');
 const sendToTools = document.getElementById('sendToTools');
 const candidateList = document.getElementById('candidateList');
+const feedbackLatin = document.getElementById('feedbackLatin');
+const feedbackMongolian = document.getElementById('feedbackMongolian');
+const feedbackNote = document.getElementById('feedbackNote');
+const feedbackList = document.getElementById('feedbackList');
 
+const FEEDBACK_KEY = 'imongol_ime_feedback_v1';
 const imeEngine = window.iMongolIMEEngine.createEngine(window.iMongolIMEData);
 let activeCandidate = null;
 
@@ -31,10 +36,58 @@ function copyText(value, button) {
   navigator.clipboard?.writeText(value).then(() => flashCopied(button)).catch(() => flashCopied(button));
 }
 
+function loadFeedback() {
+  try {
+    return JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveFeedbackList(list) {
+  localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list));
+}
+
+function feedbackToDictionary() {
+  const list = loadFeedback();
+  const dictionary = {};
+  list.forEach(item => {
+    const key = String(item.latin || '').trim().toLowerCase();
+    const text = String(item.mongolian || '').trim();
+    if (key && text) dictionary[key] = { text, note: item.note || 'local feedback' };
+  });
+  return dictionary;
+}
+
+function rebuildEngine() {
+  const mergedData = {
+    ...window.iMongolIMEData,
+    dictionary: {
+      ...window.iMongolIMEData.dictionary,
+      ...feedbackToDictionary()
+    }
+  };
+  return window.iMongolIMEEngine.createEngine(mergedData);
+}
+
+let currentEngine = rebuildEngine();
+
 function renderRules() {
-  ruleRows.innerHTML = imeEngine.rules.map(([latin, mongolian, code, note]) => `
+  ruleRows.innerHTML = currentEngine.rules.map(([latin, mongolian, code, note]) => `
     <tr><td><code>${escapeHtml(latin)}</code></td><td class="cp-char">${escapeHtml(mongolian)}</td><td><code>${escapeHtml(code)}</code></td><td>${escapeHtml(note)}</td></tr>
   `).join('');
+}
+
+function renderFeedbackList() {
+  const list = loadFeedback();
+  if (!feedbackList) return;
+  feedbackList.innerHTML = list.length ? list.map((item, index) => `
+    <div class="feedback-item">
+      <div><strong>${escapeHtml(item.latin)}</strong> → <span class="feedback-mn">${escapeHtml(item.mongolian)}</span></div>
+      <small>${escapeHtml(item.note || 'local feedback')} · ${escapeHtml(item.createdAt || '')}</small>
+      <button class="tool-button ghost mini" data-delete-feedback="${index}">删除</button>
+    </div>
+  `).join('') : '<p class="note">还没有本地反馈。发现候选不准时，可以在这里积累你自己的词库。</p>';
 }
 
 function renderCandidateList(candidates) {
@@ -53,7 +106,7 @@ function applyCandidate(candidate) {
   activeCandidate = candidate;
   mongolianOutput.textContent = candidate?.text || '';
   verticalPreview.textContent = candidate?.text || '';
-  const cps = imeEngine.toCodepoints(candidate?.text || '');
+  const cps = currentEngine.toCodepoints(candidate?.text || '');
   codepointsOutput.textContent = cps.join(' ');
   debugOutput.innerHTML = (candidate?.tokens || []).map(token => `
     <span class="debug-token ${token.type === 'dictionary' || token.type === 'fuzzy' ? 'control' : ''}">
@@ -64,9 +117,15 @@ function applyCandidate(candidate) {
 }
 
 function renderIme() {
-  const candidates = imeEngine.buildCandidates(latinInput.value);
+  const candidates = currentEngine.buildCandidates(latinInput.value);
   renderCandidateList(candidates);
   applyCandidate(candidates[0] || { text: '', tokens: [] });
+}
+
+function refreshAfterFeedbackChange() {
+  currentEngine = rebuildEngine();
+  renderFeedbackList();
+  renderIme();
 }
 
 document.getElementById('sampleMongol').addEventListener('click', () => { latinInput.value = 'monggol'; renderIme(); });
@@ -80,7 +139,7 @@ candidateList.addEventListener('click', event => {
   const button = event.target.closest('[data-use-candidate]');
   const card = event.target.closest('[data-candidate-index]');
   const index = Number(button?.dataset.useCandidate ?? card?.dataset.candidateIndex);
-  const candidates = imeEngine.buildCandidates(latinInput.value);
+  const candidates = currentEngine.buildCandidates(latinInput.value);
   if (!Number.isNaN(index) && candidates[index]) {
     candidateList.querySelectorAll('.candidate-card').forEach(el => el.classList.remove('active-candidate'));
     const chosen = candidateList.querySelector(`[data-candidate-index="${index}"]`);
@@ -89,5 +148,42 @@ candidateList.addEventListener('click', event => {
   }
 });
 
+document.getElementById('useCurrentAsFeedback').addEventListener('click', () => {
+  feedbackLatin.value = latinInput.value.trim();
+  feedbackMongolian.value = mongolianOutput.textContent.trim();
+  feedbackNote.value = activeCandidate?.source || 'current candidate';
+});
+
+document.getElementById('saveFeedback').addEventListener('click', event => {
+  const latin = feedbackLatin.value.trim();
+  const mongolian = feedbackMongolian.value.trim();
+  if (!latin || !mongolian) return;
+  const list = loadFeedback().filter(item => String(item.latin).toLowerCase() !== latin.toLowerCase());
+  list.unshift({ latin, mongolian, note: feedbackNote.value.trim() || 'local feedback', createdAt: new Date().toISOString().slice(0, 10) });
+  saveFeedbackList(list.slice(0, 200));
+  flashCopied(event.currentTarget);
+  refreshAfterFeedbackChange();
+});
+
+document.getElementById('exportFeedback').addEventListener('click', event => {
+  copyText(JSON.stringify(loadFeedback(), null, 2), event.currentTarget);
+});
+
+document.getElementById('clearFeedback').addEventListener('click', () => {
+  localStorage.removeItem(FEEDBACK_KEY);
+  refreshAfterFeedbackChange();
+});
+
+feedbackList.addEventListener('click', event => {
+  const button = event.target.closest('[data-delete-feedback]');
+  if (!button) return;
+  const index = Number(button.dataset.deleteFeedback);
+  const list = loadFeedback();
+  list.splice(index, 1);
+  saveFeedbackList(list);
+  refreshAfterFeedbackChange();
+});
+
 renderRules();
+renderFeedbackList();
 renderIme();
