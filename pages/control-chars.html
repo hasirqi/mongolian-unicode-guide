@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>控制符与变体选择器｜传统蒙古文</title><link rel="stylesheet" href="../style.css" /></head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="beginner.html">大众版</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="research.html">资料</a><a href="test-cases.html">测试</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">Control Characters</p><h1>FVS / MVS / NNBSP / ZWJ</h1><p class="subtitle">这些“看不见或不容易看见”的字符，是传统蒙古文正确显示、连接和变体选择的关键。</p></div></header>
+<main>
+<section class="section two-col"><div><h2>控制符为什么重要？</h2><p class="lead">传统蒙古文不是单纯把字母排在一起就能正确显示。某些场景需要变体选择器或连接控制符，帮助排版引擎选择正确字形。</p></div><aside class="card"><h3>注意</h3><p>控制符通常不可见。看起来一样的文本，底层码点序列可能不同。</p></aside></section>
+<section class="section"><h2>常见控制符与辅助字符</h2><table class="table"><thead><tr><th>名称</th><th>码位</th><th>用途</th><th>风险</th></tr></thead><tbody><tr><td>FVS1</td><td><code>U+180B</code></td><td>请求第一类自由变体。</td><td>字体或引擎不支持时可能无效。</td></tr><tr><td>FVS2</td><td><code>U+180C</code></td><td>请求第二类自由变体。</td><td>不同字体表现可能不同。</td></tr><tr><td>FVS3</td><td><code>U+180D</code></td><td>请求第三类自由变体。</td><td>需要测试具体字符。</td></tr><tr><td>MVS</td><td><code>U+180E</code></td><td>历史兼容相关字符。</td><td>规范和实现历史复杂，使用需谨慎。</td></tr><tr><td>NNBSP</td><td><code>U+202F</code></td><td>常用于后缀前的窄不换行空格。</td><td>复制、换行、搜索时要测试。</td></tr><tr><td>ZWJ</td><td><code>U+200D</code></td><td>零宽连接符，辅助连接和取形。</td><td>滥用会造成不可预期显示。</td></tr><tr><td>ZWNJ</td><td><code>U+200C</code></td><td>零宽不连接符，阻断连接。</td><td>可能影响搜索和排序。</td></tr></tbody></table></section>
+<section class="section grid-3"><article class="card"><h2>FVS</h2><p>FVS 不代表新字符，而是告诉系统：这个字符在这里希望使用某个标准化变体。</p></article><article class="card"><h2>ZWJ / ZWNJ</h2><p>用于影响连接关系。它们看不见，但会改变 shaping 结果。</p></article><article class="card"><h2>NNBSP</h2><p>常见于后缀处理，是传统蒙古文文本处理里绕不开的测试点。</p></article></section>
+<section class="section"><h2>开发者必须提供的调试视图</h2><pre><code>显示文本：ᠮᠣᠩᠭᠣᠯ
+底层码点：U+182E U+1823 U+1829 U+182D U+1823 U+182F
+
+建议工具：
+- 显示每个字符的 Unicode 编号
+- 高亮不可见字符
+- 显示 FVS / ZWJ / NNBSP 的位置
+- 支持复制码点序列
+- 支持不同字体对比</code></pre></section>
+<section class="section callout"><h2>实用原则</h2><p>控制符不是“越多越好”。优先保存标准文本，只有在确实需要指定变体或连接状态时使用控制符，并用测试用例验证。</p><div class="next-links"><a href="web-demo.html">下一页：Web 竖排 Demo</a><a href="test-cases.html">测试用例</a></div></section>
+</main><footer><p>Open Mongolian Script Lab · CC BY 4.0 / MIT</p></footer>
+</body></html>
