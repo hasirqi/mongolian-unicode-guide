@@ -8,137 +8,18 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <header class="hero">
-    <p class="eyebrow">Open Mongolian Script Lab</p>
-    <h1>从字符到字形：传统蒙古文 Unicode 编码</h1>
-    <p class="subtitle">用图示把传统蒙古文 Unicode 编码讲清楚：大众能懂表层逻辑，开发者、字体工程师和研究者能继续迭代。</p>
-    <div class="hero-actions">
-      <a href="#visual" class="btn primary">看总览图示</a>
-      <a href="#deep-dive" class="btn">看完整研究内容</a>
-      <a href="#developer" class="btn">看工程实现</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="section two-col">
-      <div>
-        <h2>一句话说清楚</h2>
-        <p class="lead">传统蒙古文 Unicode 不是“一个视觉字形一个码位”。它保存的是<strong>名义字符序列</strong>，最终看到的独立形、词首形、词中形、词尾形、变体与竖排效果，由<strong>控制符、字体和排版引擎</strong>共同决定。</p>
-      </div>
-      <aside class="card">
-        <h3>核心公式</h3>
-        <p><strong>字符编码</strong> + <strong>控制符 / 变体选择器</strong> + <strong>OpenType 字体</strong> + <strong>排版引擎</strong> = 正确显示</p>
-      </aside>
-    </section>
-
-    <section id="visual" class="section">
-      <h2>总览图：从输入到最终显示</h2>
-      <p>这张流程图是理解传统蒙古文 Unicode 的主线：Unicode 负责“存什么”，字体和排版引擎负责“怎样显示”。</p>
-      <div class="pipeline">
-        <article class="step"><span class="num">1</span><h3>输入 / 键盘输入</h3><p>输入法输出标准字符序列，不应该输出截图、私有码位，或只在某个软件里可用的假编码。</p></article>
-        <article class="step"><span class="num">2</span><h3>Unicode 码点序列</h3><p class="mongolian-row">ᠮᠣᠩᠭᠣᠯ</p><code>U+182E U+1823 U+1829 U+182D U+1823 U+182F</code><p class="note">存储的是字符编号，不是最终字形外观。</p></article>
-        <article class="step"><span class="num">3</span><h3>控制符 / 辅助符号</h3><div class="chips"><span>FVS1 U+180B</span><span>FVS2 U+180C</span><span>FVS3 U+180D</span><span>MVS U+180E</span><span>NNBSP U+202F</span><span>ZWJ U+200D</span><span>ZWNJ U+200C</span></div></article>
-        <article class="step"><span class="num">4</span><h3>Shaping Engine / 排版引擎</h3><p>根据前后文、连接状态、控制符和字体规则，决定独立形、词首形、词中形、词尾形及变体。</p></article>
-        <article class="step"><span class="num">5</span><h3>字体 / OpenType 字体</h3><p>字体提供具体字形轮廓与替换规则，例如 cmap、GSUB、GPOS、竖排相关特性。</p></article>
-        <article class="step"><span class="num">6</span><h3>最终显示</h3><div class="vertical-demo">ᠮᠣᠩᠭᠣᠯ</div><p>传统蒙古文通常竖排：从上到下书写，列从左到右排列。</p></article>
-      </div>
-    </section>
-
-    <section class="section grid-3">
-      <article class="card"><h2>Unicode 区块概览</h2><ul><li><code>U+1800–U+180A</code>：标点符号</li><li><code>U+180B–U+180D</code>：FVS1–FVS3</li><li><code>U+180E</code>：MVS（历史兼容与规范演进相关）</li><li><code>U+1810–U+1819</code>：数字</li><li><code>U+1820–U+1842</code>：蒙古字母</li><li><code>U+1843–U+18AA</code>：扩展字母与附加符号</li></ul></article>
-      <article class="card"><h2>为什么特别？</h2><ul class="checks"><li>文字竖排，不是普通横排脚本</li><li>同一字母会随位置改变字形</li><li>同一字符可有不同变体</li><li>正确显示依赖字体 + 排版引擎</li></ul></article>
-      <article class="card danger"><h2>常见误区</h2><ul><li>Unicode ≠ 字体</li><li>编码的是字符，不是图片或固定字形</li><li>看到一样，不代表底层码点一样</li><li>缺少字体时可能显示为方框或错形</li></ul></article>
-    </section>
-
-    <section id="deep-dive" class="section">
-      <h2>完整解释：传统蒙古文 Unicode 到底解决什么？</h2>
-      <div class="grid-3">
-        <article class="card"><h3>1. 解决文本交换</h3><p>Unicode 的第一价值是让传统蒙古文可以作为文本被保存、复制、搜索、传输和索引，而不是停留在图片、PDF 扫描件或某个软件私有编码里。</p></article>
-        <article class="card"><h3>2. 不直接规定字形</h3><p>Unicode 给字符分配码位，但不等于字体。最终字形外观由字体和渲染系统完成；同一码点在不同字体里可能显示风格不同。</p></article>
-        <article class="card"><h3>3. 依赖上下文选形</h3><p>传统蒙古文字母具有连写和位置变形，单个字符在词首、词中、词尾或独立状态下可能呈现不同外观。</p></article>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>位置变形示意</h2>
-      <p>下面是一个简化示意。真实字形应以目标字体和排版引擎的输出为准。</p>
-      <div class="forms"><div><small>基础字母</small><b>ᠭ</b></div><span>→</span><div><small>独立形</small><b>ᠭ</b></div><span>→</span><div><small>词首形</small><b>ᠭ‍</b></div><span>→</span><div><small>词中形</small><b>‍ᠭ‍</b></div><span>→</span><div><small>词尾形</small><b>‍ᠭ</b></div></div>
-      <p class="note">重点：位置变化不是靠给每个视觉形态单独编码，而是靠“字符 + 上下文 + 排版规则 + 字体”生成。</p>
-    </section>
-
-    <section class="section four">
-      <article class="card"><h2>1. 基础码位</h2><p>每个字符都有 Unicode 编号。例如：<code>ᠠ = U+1820</code>，<code>ᠨ = U+1828</code>，<code>ᠭ = U+182D</code>。码位是文本交换的基础。</p></article>
-      <article class="card"><h2>2. 变体与控制符</h2><p>FVS 用于请求特定字形变体；ZWJ/ZWNJ 辅助连接或断开；NNBSP 常用于后缀前连接；MVS 属于历史兼容与规范演进中的关键点。</p></article>
-      <article class="card"><h2>3. 渲染机制</h2><p>文本先保存为码点序列，引擎读取上下文并选形，字体输出正确连写字形，最终在横排或竖排环境中显示。</p></article>
-      <article class="card"><h2>4. 实践要点</h2><p>不要把传统蒙古文当图片处理。编码、字体、排版、输入法、复制粘贴、搜索排序都要一起测试。</p></article>
-    </section>
-
-    <section class="section grid-3">
-      <article class="card"><h2>谁负责什么？</h2><ul><li><strong>Unicode：</strong>给字符分配码位。</li><li><strong>输入法：</strong>输出标准字符序列。</li><li><strong>排版引擎：</strong>按上下文选形。</li><li><strong>字体：</strong>绘制最终字形。</li></ul></article>
-      <article class="card"><h2>正确显示链路</h2><ul><li>文本保存为 Unicode 码点</li><li>应用调用系统或浏览器排版能力</li><li>排版引擎处理连接、变体和位置形</li><li>字体提供可显示的 Mongolian glyph</li></ul></article>
-      <article class="card"><h2>失败时会怎样？</h2><ul><li>显示方框 tofu</li><li>字形不连写</li><li>词首/词中/词尾形错误</li><li>竖排方向、列方向或标点方向异常</li></ul></article>
-    </section>
-
-    <section id="developer" class="section">
-      <h2>开发者视角：真正的数据流</h2>
-      <div class="flow"><span>IME 输入</span><span>Unicode 码点流</span><span>Normalization</span><span>cmap</span><span>GSUB</span><span>GPOS</span><span>writing-mode</span><span>浏览器 / OS / PDF 输出</span></div>
-      <pre><code>示例：ᠮᠣᠩᠭᠣᠯ
-U+182E U+1823 U+1829 U+182D U+1823 U+182F
-
-工程判断：
-1. 数据库保存 Unicode 码点序列，不保存截图。
-2. 输入法输出标准字符，不输出私有编码。
-3. 字体必须支持 Mongolian OpenType shaping。
-4. 网页竖排优先测试 writing-mode: vertical-lr。
-5. 搜索、复制、粘贴、排序、表单输入都要单独验收。
-6. 同一视觉结果可能由不同码点序列产生，必须提供检测工具。
-7. PDF、图片导出、OCR、LLM 输入都需要独立测试。</code></pre>
-    </section>
-
-    <section class="section">
-      <h2>Web 实践建议</h2>
-      <div class="grid-3">
-        <article class="card"><h3>CSS 竖排</h3><pre><code>.mongolian {
-  writing-mode: vertical-lr;
-  text-orientation: mixed;
-  font-family: "Noto Sans Mongolian", serif;
-}</code></pre></article>
-        <article class="card"><h3>文本检测</h3><p>需要提供“显示文本”和“底层码点序列”双视图，让用户看到看不见的 FVS、ZWJ、NNBSP 等控制符。</p></article>
-        <article class="card"><h3>兼容性矩阵</h3><p>建议按 Chrome、Safari、Firefox、iOS、Android、Windows、macOS、PDF 导出分别记录显示结果。</p></article>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>建议继续迭代的研究模块</h2>
-      <div class="four">
-        <article class="card"><h3>字符表</h3><p>做 U+1800–U+18AF 可检索字符表，展示名称、码点、分类、常见用法。</p></article>
-        <article class="card"><h3>变体表</h3><p>整理 FVS1/FVS2/FVS3 对不同字母的效果，记录字体和浏览器差异。</p></article>
-        <article class="card"><h3>测试用例</h3><p>建立输入、复制、搜索、排序、PDF 导出、图片渲染、OCR 识别测试集。</p></article>
-        <article class="card"><h3>工具页面</h3><p>做在线码点查看器、Unicode 序列解释器、竖排预览器和字体对比器。</p></article>
-      </div>
-    </section>
-
-    <section class="section sources">
-      <h2>开放研究资料</h2>
-      <p>正文面向大众，资料区保留官方文档、标准讨论和工程实现入口，方便专业人士继续迭代。</p>
-      <ul>
-        <li><a href="https://www.unicode.org/charts/PDF/U1800.pdf">Unicode Mongolian Code Chart</a></li>
-        <li><a href="https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-13/">Unicode Core Specification, Chapter 13</a></li>
-        <li><a href="https://www.unicode.org/notes/tn57/">Unicode Technical Note #57: Unicode Mongolian</a></li>
-        <li><a href="https://www.w3.org/TR/mlreq/">W3C Mongolian Layout Requirements</a></li>
-        <li><a href="https://www.w3.org/TR/mong-gap/">W3C Mongolian Gap Analysis</a></li>
-        <li><a href="https://learn.microsoft.com/en-us/typography/script-development/use">Microsoft Universal Shaping Engine / OpenType font development</a></li>
-        <li><a href="https://github.com/notofonts/mongolian">Noto Sans Mongolian source repository</a></li>
-        <li><a href="https://github.com/harfbuzz/harfbuzz">HarfBuzz shaping engine</a></li>
-      </ul>
-    </section>
-
-    <section class="section">
-      <h2>开放项目方向</h2>
-      <p class="lead">这个页面不是终点，而是传统蒙古文数字化开放项目的首页。下一步应把“知识解释、标准资料、测试工具、字体/浏览器兼容矩阵”放到同一个开放仓库里，让懂语言的人、懂字体的人、懂前端的人都能参与。</p>
-      <div class="chips"><span>支持文本存储与交换</span><span>支持搜索与复制</span><span>支持正确竖排显示</span><span>推动传统蒙古文真正数字化</span></div>
-    </section>
-  </main>
-  <footer><p>建议许可：内容 CC BY 4.0；代码 MIT License。欢迎提交 Issue / Pull Request 改进。</p></footer>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="pages/beginner.html">大众版</a><a href="pages/unicode-block.html">码位</a><a href="pages/shaping.html">字形变换</a><a href="pages/control-chars.html">控制符</a><a href="pages/web-demo.html">Web Demo</a><a href="pages/research.html">资料</a><a href="pages/test-cases.html">测试</a></div></div></nav>
+<header class="hero">
+  <p class="eyebrow">Open Mongolian Script Lab</p>
+  <h1>从字符到字形：传统蒙古文 Unicode 编码</h1>
+  <p class="subtitle">用图示把传统蒙古文 Unicode 编码讲清楚：大众能懂表层逻辑，开发者、字体工程师和研究者能继续迭代。</p>
+  <div class="hero-actions"><a href="pages/beginner.html" class="btn primary">从大众版开始</a><a href="pages/web-demo.html" class="btn">看网页 Demo</a><a href="pages/research.html" class="btn">看研究资料</a></div>
+</header>
+<main>
+<section class="section two-col"><div><h2>一句话说清楚</h2><p class="lead">传统蒙古文 Unicode 不是“一个视觉字形一个码位”。它保存的是<strong>名义字符序列</strong>，最终看到的独立形、词首形、词中形、词尾形、变体与竖排效果，由<strong>控制符、字体和排版引擎</strong>共同决定。</p></div><aside class="card"><h3>核心公式</h3><p><strong>字符编码</strong> + <strong>控制符 / 变体选择器</strong> + <strong>OpenType 字体</strong> + <strong>排版引擎</strong> = 正确显示</p></aside></section>
+<section class="section"><h2>内容导航</h2><div class="grid-3"><a class="card card-link" href="pages/beginner.html"><h3>大众解释版</h3><p>先理解传统蒙古文为什么特殊，不陷入技术细节。</p></a><a class="card card-link" href="pages/unicode-block.html"><h3>Unicode 区块与码位</h3><p>了解 U+1800–U+18AF、基础码位与字符表逻辑。</p></a><a class="card card-link" href="pages/shaping.html"><h3>字形变换与排版引擎</h3><p>解释独立形、词首形、词中形、词尾形如何生成。</p></a><a class="card card-link" href="pages/control-chars.html"><h3>控制符与变体选择器</h3><p>解释 FVS、MVS、NNBSP、ZWJ、ZWNJ 的作用。</p></a><a class="card card-link" href="pages/web-demo.html"><h3>网页竖排 Demo</h3><p>提供 CSS、显示样例和码点检测思路。</p></a><a class="card card-link" href="pages/research.html"><h3>调研报告与参考资料</h3><p>整理 Unicode、W3C、HarfBuzz、Noto、OpenType 等研究入口。</p></a><a class="card card-link" href="pages/test-cases.html"><h3>测试用例与验收清单</h3><p>把显示问题变成可复现、可提交、可修复的工程测试。</p></a></div></section>
+<section class="section"><h2>总览图：从输入到最终显示</h2><div class="pipeline"><article class="step"><span class="num">1</span><h3>输入</h3><p>输入法输出标准字符序列。</p></article><article class="step"><span class="num">2</span><h3>码点</h3><p class="mongolian-row">ᠮᠣᠩᠭᠣᠯ</p><code>U+182E U+1823 U+1829 U+182D U+1823 U+182F</code></article><article class="step"><span class="num">3</span><h3>控制符</h3><div class="chips"><span>FVS</span><span>MVS</span><span>NNBSP</span><span>ZWJ</span></div></article><article class="step"><span class="num">4</span><h3>Shaping Engine</h3><p>按上下文选择正确字形。</p></article><article class="step"><span class="num">5</span><h3>OpenType 字体</h3><p>提供 glyph 与替换规则。</p></article><article class="step"><span class="num">6</span><h3>最终显示</h3><div class="vertical-demo">ᠮᠣᠩᠭᠣᠯ</div></article></div></section>
+<section class="section callout"><h2>开放项目方向</h2><p class="lead">这个项目的目标，是把传统蒙古文数字化中的编码、字体、输入、显示、复制、搜索、PDF、OCR、AI 处理问题，整理成开放知识库与测试工具。</p><div class="chips"><span>支持文本存储与交换</span><span>支持搜索与复制</span><span>支持正确竖排显示</span><span>推动传统蒙古文真正数字化</span></div></section>
+</main><footer><p>建议许可：内容 CC BY 4.0；代码 MIT License。欢迎提交 Issue / Pull Request 改进。</p></footer>
 </body>
 </html>
