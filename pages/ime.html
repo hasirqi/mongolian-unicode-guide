@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iMongol IME｜传统蒙古文网页输入法</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="../index.html">首页</a><a href="beginner.html">大众版</a><a href="char-table.html">字符表</a><a href="ime.html">iMongol IME</a><a href="tools.html">在线工具</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="test-cases.html">测试</a><a href="research.html">资料</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">open-mongol-ime · Web MVP</p><h1>iMongol IME：传统蒙古文网页输入法</h1><p class="subtitle">第一步先做 Web IME：用拉丁转写输入传统蒙古文 Unicode，为将来的系统输入法、聊天工具和移动端键盘打基础。</p></div></header>
+<main>
+<section class="section callout">
+  <h2>实验性说明</h2>
+  <p class="lead">这是 iMongol IME 的最小可用原型。当前目标不是一次性做成标准输入法，而是先打通：转写输入 → Unicode 输出 → 复制 → 码点分析 → 竖排预览。</p>
+  <div class="chips"><span>产品名：iMongol IME</span><span>项目名：open-mongol-ime</span><span>阶段：Web MVP</span></div>
+</section>
+
+<section class="section two-col">
+  <div class="card">
+    <h2>拉丁转写输入</h2>
+    <textarea id="latinInput" class="tool-textarea latin-ime" spellcheck="false" placeholder="输入 latin transliteration，例如：mongol bichig">mongol bichig</textarea>
+    <div class="tool-actions">
+      <button id="sampleMongol" class="tool-button">mongol</button>
+      <button id="sampleBichig" class="tool-button">bichig</button>
+      <button id="sampleSentence" class="tool-button">样例句</button>
+      <button id="clearIme" class="tool-button ghost">清空</button>
+    </div>
+    <p class="note">当前采用最长匹配规则：先匹配 ch / sh / ng / oe / ue，再匹配单字母。后续会加入候选词、词库和更严谨的转写规则。</p>
+  </div>
+  <aside class="card">
+    <h2>规则状态</h2>
+    <ul class="checks">
+      <li>本地浏览器运行，不上传文本</li>
+      <li>输出标准 Unicode 字符</li>
+      <li>可送入码点查看器验证</li>
+      <li>规则仍为实验版，需要持续校正</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="section grid-2">
+  <article class="card">
+    <h2>传统蒙古文输出</h2>
+    <div id="mongolianOutput" class="ime-output" lang="mn-Mong"></div>
+    <div class="tool-actions">
+      <button id="copyMongolian" class="tool-button">复制蒙古文</button>
+      <a id="sendToTools" class="tool-button" href="tools.html">送入码点查看器</a>
+    </div>
+  </article>
+  <article class="card">
+    <h2>竖排预览</h2>
+    <div id="verticalImePreview" class="ime-vertical-preview" lang="mn-Mong"></div>
+  </article>
+</section>
+
+<section class="section grid-2">
+  <article class="card">
+    <h2>码点序列</h2>
+    <pre><code id="imeCodepoints"></code></pre>
+    <button id="copyImeCodepoints" class="tool-button">复制码点序列</button>
+  </article>
+  <article class="card">
+    <h2>转写调试</h2>
+    <div id="imeDebug" class="debug-view"></div>
+  </article>
+</section>
+
+<section class="section">
+  <h2>当前基础转写规则</h2>
+  <div class="card table-wrap">
+    <table class="table"><thead><tr><th>拉丁</th><th>蒙古文</th><th>码位</th><th>说明</th></tr></thead><tbody id="ruleRows"></tbody></table>
+  </div>
+</section>
+
+<section class="section callout">
+  <h2>后续路线</h2>
+  <div class="four">
+    <article class="card"><h3>Phase 1</h3><p>Web IME：转写输入、复制、码点分析、竖排预览。</p></article>
+    <article class="card"><h3>Phase 2</h3><p>候选词和词库：常用词、姓名、地名、后缀规则。</p></article>
+    <article class="card"><h3>Phase 3</h3><p>IME Core：把规则抽成可复用核心，供系统输入法和聊天工具调用。</p></article>
+    <article class="card"><h3>Phase 4</h3><p>系统输入法 / 移动键盘 / 即时聊天工具。</p></article>
+  </div>
+</section>
+</main>
+<footer><p>iMongol IME · open-mongol-ime · Open Mongolian Script Lab</p></footer>
+<script src="../scripts/ime.js"></script>
+</body>
+</html>
