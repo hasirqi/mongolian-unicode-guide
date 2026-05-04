@@ -55,6 +55,17 @@ function escapeHtml(s) {
   return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
+function flashCopied(el) {
+  if (!el) return;
+  const old = el.textContent;
+  el.textContent = '已复制';
+  el.classList.add('copied');
+  setTimeout(() => {
+    el.textContent = old;
+    el.classList.remove('copied');
+  }, 1200);
+}
+
 function applyQueryInput() {
   const params = new URLSearchParams(window.location.search);
   const text = params.get('text');
@@ -119,8 +130,9 @@ function renderPreviews() {
   `).join('');
 }
 
-function copySequence() {
-  navigator.clipboard?.writeText(seq.textContent || '').catch(() => {});
+function copySequence(event) {
+  const button = event?.currentTarget;
+  navigator.clipboard?.writeText(seq.textContent || '').then(() => flashCopied(button)).catch(() => flashCopied(button));
 }
 
 document.getElementById('sampleBasic').addEventListener('click', () => { input.value = 'ᠮᠣᠩᠭᠣᠯ'; renderCodepoints(); });
