@@ -64,6 +64,15 @@ function applyQueryInput() {
     const title = document.querySelector('.page-hero .subtitle');
     if (title && cp) title.textContent = `已从字符表带入 ${cp}，可查看码点、不可见控制符、竖排预览和字体对比。`;
   }
+
+  const banner = document.getElementById('returnToCharTable');
+  const bannerText = document.getElementById('returnToCharTableText');
+  const bannerLink = document.getElementById('returnToCharTableLink');
+  if (cp && banner && bannerText && bannerLink) {
+    banner.hidden = false;
+    bannerText.textContent = `当前正在分析 ${cp}。返回字符表后会自动定位并高亮这个字符。`;
+    bannerLink.href = `char-table.html?focus=${encodeURIComponent(cp)}`;
+  }
 }
 
 function renderCodepoints() {
