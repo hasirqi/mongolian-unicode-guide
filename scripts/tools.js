@@ -22,8 +22,8 @@ const CONTROL_NAMES = {
 };
 
 const FONT_PRESETS = [
-  { label: 'Noto Sans Mongolian', family: '"Noto Sans Mongolian", serif' },
-  { label: 'Mongolian Baiti', family: '"Mongolian Baiti", serif' },
+  { label: 'Noto Sans Mongolian', family: '\"Noto Sans Mongolian\", serif' },
+  { label: 'Mongolian Baiti', family: '\"Mongolian Baiti\", serif' },
   { label: 'Menksoft / 系统回退', family: 'MenksoftQagan, Menksoft, serif' },
   { label: '系统 Serif', family: 'serif' },
   { label: '系统 Sans-serif', family: 'sans-serif' }
@@ -53,6 +53,17 @@ function visibleChar(ch, cp) {
 
 function escapeHtml(s) {
   return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+function applyQueryInput() {
+  const params = new URLSearchParams(window.location.search);
+  const text = params.get('text');
+  const cp = params.get('cp');
+  if (text) {
+    input.value = text;
+    const title = document.querySelector('.page-hero .subtitle');
+    if (title && cp) title.textContent = `已从字符表带入 ${cp}，可查看码点、不可见控制符、竖排预览和字体对比。`;
+  }
 }
 
 function renderCodepoints() {
@@ -108,4 +119,5 @@ document.getElementById('sampleControl').addEventListener('click', () => { input
 document.getElementById('clearInput').addEventListener('click', () => { input.value = ''; renderCodepoints(); });
 document.getElementById('copySequence').addEventListener('click', copySequence);
 [input, fontSize, letterSpacing, writingMode].forEach(el => el.addEventListener('input', renderCodepoints));
+applyQueryInput();
 renderCodepoints();
