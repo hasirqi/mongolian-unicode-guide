@@ -81,6 +81,32 @@
   </article>
 </section>
 
+<section class="section two-col">
+  <div class="card">
+    <h2>用户反馈词库入口</h2>
+    <p class="note">候选不对时，把“输入”和“你认为正确的传统蒙古文”存到本地。当前只保存在浏览器 LocalStorage，不上传服务器。</p>
+    <label class="feedback-label">Latin 输入
+      <input id="feedbackLatin" class="feedback-input" placeholder="例如：monggol" />
+    </label>
+    <label class="feedback-label">正确蒙古文 Unicode
+      <textarea id="feedbackMongolian" class="feedback-input feedback-mongolian" placeholder="粘贴或输入你认为正确的传统蒙古文"></textarea>
+    </label>
+    <label class="feedback-label">说明 / 来源
+      <input id="feedbackNote" class="feedback-input" placeholder="例如：常用写法、姓名、地名、后缀等" />
+    </label>
+    <div class="tool-actions">
+      <button id="saveFeedback" class="tool-button">保存到本地词库</button>
+      <button id="useCurrentAsFeedback" class="tool-button ghost">用当前输入/输出填入</button>
+      <button id="exportFeedback" class="tool-button ghost">导出 JSON</button>
+      <button id="clearFeedback" class="tool-button ghost">清空本地词库</button>
+    </div>
+  </div>
+  <aside class="card">
+    <h2>本地反馈记录</h2>
+    <div id="feedbackList" class="feedback-list"></div>
+  </aside>
+</section>
+
 <section class="section">
   <h2>当前基础规则表</h2>
   <div class="card table-wrap">
