@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>网页竖排 Demo｜传统蒙古文 Unicode</title><link rel="stylesheet" href="../style.css" /></head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="brand" href="../index.html">Mongolian Unicode Guide</a><div class="nav-links"><a href="beginner.html">大众版</a><a href="unicode-block.html">码位</a><a href="shaping.html">字形变换</a><a href="control-chars.html">控制符</a><a href="web-demo.html">Web Demo</a><a href="research.html">资料</a><a href="test-cases.html">测试</a></div></div></nav>
+<header class="page-hero"><div class="page-hero-inner"><p class="eyebrow">Web Demo</p><h1>网页竖排 Demo</h1><p class="subtitle">用最小 HTML/CSS 展示传统蒙古文在网页中的竖排、字体、复制和码点检测思路。</p></div></header>
+<main>
+<section class="section two-col"><div><h2>竖排核心 CSS</h2><pre><code>.mongolian {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  font-family: "Noto Sans Mongolian", serif;
+}</code></pre></div><aside class="card"><h3>显示样例</h3><div class="vertical-wide">ᠮᠣᠩᠭᠣᠯ</div></aside></section>
+<section class="section grid-3"><article class="card"><h2>1. 字体</h2><p>优先选择支持 Mongolian shaping 的字体，并记录字体名称、版本、来源。</p></article><article class="card"><h2>2. 浏览器</h2><p>Chrome、Safari、Firefox 的实际显示要分别测试，尤其是竖排方向和控制符。</p></article><article class="card"><h2>3. 系统</h2><p>macOS、Windows、iOS、Android 的字体回退和 shaping 行为可能不同。</p></article></section>
+<section class="section"><h2>网页最小模板</h2><pre><code>&lt;div class="mongolian"&gt;ᠮᠣᠩᠭᠣᠯ&lt;/div&gt;
+
+&lt;style&gt;
+.mongolian {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  font-family: "Noto Sans Mongolian", serif;
+  font-size: 40px;
+}
+&lt;/style&gt;</code></pre></section>
+<section class="section grid-2"><article class="card"><h2>码点检测思路</h2><pre><code>function codepoints(str) {
+  return Array.from(str).map(ch =>
+    'U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')
+  );
+}</code></pre></article><article class="card"><h2>必须显示两层</h2><ul><li>用户看到的传统蒙古文文本</li><li>底层 Unicode 码点序列</li><li>不可见控制符位置</li><li>字体与浏览器信息</li></ul></article></section>
+<section class="section callout"><h2>下一步做成真正工具</h2><p>这个页面后续可以扩展成在线工具：输入传统蒙古文 → 显示码点 → 高亮 FVS/ZWJ/NNBSP → 竖排预览 → 字体对比 → 导出测试报告。</p><div class="next-links"><a href="test-cases.html">测试用例</a><a href="research.html">研究资料</a></div></section>
+</main><footer><p>Open Mongolian Script Lab · CC BY 4.0 / MIT</p></footer>
+</body></html>
